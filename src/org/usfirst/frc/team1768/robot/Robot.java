@@ -33,21 +33,21 @@ public class Robot extends IterativeRobot {
 	public enum motorLFState {
 		on, off
 	}
-	
+
 	public enum motorRFState {
 		on, off
 	}
-	
+
 	public enum motorLBState {
 		on, off
 	}
-	
+
 	public enum motorRBState {
 		on, off
 	}
-	
+
 	public enum mode {
-		joystick, manualInput
+		joystick, manualInput, tankDrive
 	}
 
 	/**
@@ -63,15 +63,15 @@ public class Robot extends IterativeRobot {
 		motorLFChooser = new SendableChooser();
 		motorLFChooser.addDefault("Off", motorLFState.off);
 		motorLFChooser.addObject("On", motorLFState.on);
-		
+
 		motorRFChooser = new SendableChooser();
 		motorRFChooser.addDefault("Off", motorRFState.off);
 		motorRFChooser.addObject("On", motorRFState.on);
-		
+
 		motorLBChooser = new SendableChooser();
 		motorLBChooser.addDefault("Off", motorLBState.off);
 		motorLBChooser.addObject("On", motorLBState.on);
-		
+
 		motorRBChooser = new SendableChooser();
 		motorRBChooser.addDefault("Off", motorRBState.off);
 		motorRBChooser.addObject("On", motorRBState.on);
@@ -79,6 +79,7 @@ public class Robot extends IterativeRobot {
 		modeChooser = new SendableChooser();
 		modeChooser.addDefault("Joystick-controlled", mode.joystick);
 		modeChooser.addObject("Manual input control", mode.manualInput);
+		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
 		SmartDashboard.putData("Choose control mode", modeChooser);
 	}
 
@@ -88,7 +89,7 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	public void disabledInit() {
-		Drive.getInstance().setRawMotorSpeed(0);
+		Drive.getInstance().setRawMotorSpeed(0, 0);
 	}
 
 	public void disabledPeriodic() {

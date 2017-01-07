@@ -42,7 +42,7 @@ public class Drive extends Subsystem {
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveJoystickCommand());
 	}
-	
+
 	/**
 	 * Sets the motor speed for the left and right motors A raw motor speed is
 	 * actually a scaled voltage value
@@ -52,30 +52,49 @@ public class Drive extends Subsystem {
 	 * @param right
 	 *            the right motor speed, from -1 to 1
 	 */
-	public void setRawMotorSpeed(double input) {
-		switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
-		case on:
-			Drive.getInstance().talonLF.set(input);
-		case off:
-			Drive.getInstance().talonLF.set(0);
-		}
-		switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
-		case on:
-			Drive.getInstance().talonRF.set(input);
-		case off:
-			Drive.getInstance().talonRF.set(0);
-		}
-		switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
-		case on:
-			Drive.getInstance().talonLB.set(input);
-		case off:
-			Drive.getInstance().talonLB.set(0);
-		}
-		switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
-		case on:
-			Drive.getInstance().talonRB.set(input);
-		case off:
-			Drive.getInstance().talonRB.set(0);
+	public void setRawMotorSpeed(double left, double right) {
+		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
+		case joystick:
+		case manualInput:
+			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
+			case on:
+				Drive.getInstance().talonLF.set(left);
+				break;
+			case off:
+				Drive.getInstance().talonLF.set(0);
+				break;
+			}
+			switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
+			case on:
+				Drive.getInstance().talonRF.set(left);
+				break;
+			case off:
+				Drive.getInstance().talonRF.set(0);
+				break;
+			}
+			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
+			case on:
+				Drive.getInstance().talonLB.set(left);
+				break;
+			case off:
+				Drive.getInstance().talonLB.set(0);
+				break;
+			}
+			switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
+			case on:
+				Drive.getInstance().talonRB.set(left);
+				break;
+			case off:
+				Drive.getInstance().talonRB.set(0);
+				break;
+			}
+			break;
+		case tankDrive:
+			Drive.getInstance().talonLF.set(left);
+			Drive.getInstance().talonRF.set(right);
+			Drive.getInstance().talonLB.set(left);
+			Drive.getInstance().talonRB.set(right);
+			break;
 		}
 	}
 }

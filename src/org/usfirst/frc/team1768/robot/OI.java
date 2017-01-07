@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1768.robot;
 
+import org.usfirst.frc.team1768.robot.subsystems.Drive;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,13 +17,14 @@ public class OI {
 
 	private static OI singleton;
 
-	public Joystick stickLeft;
+	public Joystick stickLeft, stickRight;
 
 	private OI() {
 
 		SmartDashboard.putNumber("Motor speed", 0);
 
 		stickLeft = new Joystick(RobotMap.joystickLeftPort);
+		stickRight = new Joystick(RobotMap.joystickRightPort);
 	}
 
 	public static OI getInstance() {
@@ -36,15 +39,21 @@ public class OI {
 	}
 
 	// Motor joystick
-	public double getMotorSpeedValue() {
+	public double[] getMotorSpeedValues() {
+		double[] motorSpeedValue = new double[2];
 		Robot.mode selected = (Robot.mode) Robot.getInstance().modeChooser.getSelected();
 		switch (selected) {
 		case joystick:
-			return snapDriveJoysticks(stickLeft.getY());
+			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
+			motorSpeedValue[1] = 0;
 		case manualInput:
-			return SmartDashboard.getNumber("Motor speed");
+			motorSpeedValue[0] = SmartDashboard.getNumber("Motor speed");
+			motorSpeedValue[1] = 0;
+		case tankDrive:
+			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
+			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getY());
 		}
-		return 0;
+		return motorSpeedValue;
 	}
 
 	private static double snapDriveJoysticks(double value) {

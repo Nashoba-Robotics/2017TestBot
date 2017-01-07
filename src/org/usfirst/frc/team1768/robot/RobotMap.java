@@ -10,6 +10,7 @@ public class RobotMap {
 
 	// TODO: Get actual numbers
 	public static int joystickLeftPort = 0;
+	public static int joystickRightPort = 1;
 
 	// Talon ports
 	public static int talonLF = 0;

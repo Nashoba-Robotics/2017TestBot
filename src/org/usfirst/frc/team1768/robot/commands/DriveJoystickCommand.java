@@ -18,7 +18,7 @@ public class DriveJoystickCommand extends Command {
 
 	@Override
 	protected void execute() {
-		Drive.getInstance().setRawMotorSpeed(OI.getInstance().getMotorSpeedValue());
+		Drive.getInstance().setRawMotorSpeed(OI.getInstance().getMotorSpeedValues()[0], OI.getInstance().getMotorSpeedValues()[1]);
 	}
 
 	@Override

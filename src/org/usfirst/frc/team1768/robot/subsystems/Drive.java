@@ -4,7 +4,7 @@ import org.usfirst.frc.team1768.robot.Robot;
 import org.usfirst.frc.team1768.robot.RobotMap;
 import org.usfirst.frc.team1768.robot.commands.DriveJoystickCommand;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Drive extends Subsystem {

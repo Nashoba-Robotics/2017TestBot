@@ -14,13 +14,13 @@ import lib.Periodic;
 import lib.SmartDashboardSource;
 
 public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic {
-	public static boolean driveEnabled = false;
+	public static boolean driveEnabled = true;
 
 	private static Drive singleton;
 	CANTalon talonLF, talonRF, talonLB, talonRB;
 
-	double leftMotorSetpoint = 0;
-	double rightMotorSetpoint = 0;
+	double leftMotorSetPoint = 0;
+	double rightMotorSetPoint = 0;
 
 	private static final double turn_F = 0;
 	private static final double turn_P = 0;
@@ -33,7 +33,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 		if (driveEnabled) {
 			talonLF = new CANTalon(RobotMap.talonLF);
 			talonLF.enableBrakeMode(true);
-			talonLF.changeControlMode(TalonControlMode.Speed);
+			talonLF.changeControlMode(TalonControlMode.PercentVbus);
 			talonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLF.setF(turn_F);
 			talonLF.setP(turn_P);
@@ -43,7 +43,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
-			talonRF.changeControlMode(TalonControlMode.Speed);
+			talonRF.changeControlMode(TalonControlMode.PercentVbus);
 			talonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRF.setF(turn_F);
 			talonRF.setP(turn_P);
@@ -53,7 +53,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
-			talonLB.changeControlMode(TalonControlMode.Speed);
+			talonLB.changeControlMode(TalonControlMode.PercentVbus);
 			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLB.setF(turn_F);
 			talonLB.setP(turn_P);
@@ -63,7 +63,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
-			talonRB.changeControlMode(TalonControlMode.Speed);
+			talonRB.changeControlMode(TalonControlMode.PercentVbus);
 			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRB.setF(turn_F);
 			talonRB.setP(turn_P);
@@ -131,25 +131,29 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	}
 
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetpoint = left;// * rpm;
-		rightMotorSetpoint = right;// * rpm;
+		leftMotorSetPoint = -left;// * rpm;
+		rightMotorSetPoint = right;// * rpm;
 
+		System.out.println(Robot.getInstance().modeChooser.getSelected());
+		
 		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
 		case tankDrive:
 		case arcadeDrive:
-			talonLF.set(left);
+			talonLF.set(leftMotorSetPoint);
 			talonRF.set(right);
-			talonLB.set(left);
+			talonLB.set(leftMotorSetPoint);
 			talonRB.set(right);
 			break;
 		case manualInput:
 		case joystick:
 			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
 			case on:
-				if (talonLF.getControlMode() == TalonControlMode.Speed)
-					talonLF.set(left/* \*rpm */);
-				else
-					talonLF.set(left);
+				if (talonLF.getControlMode() == TalonControlMode.Speed) {
+					talonLF.set(leftMotorSetPoint/* \*rpm */);
+				}
+				else {
+					talonLF.set(-leftMotorSetPoint);
+				}
 				break;
 			case off:
 				talonLF.set(0);
@@ -158,9 +162,9 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
 			case on:
 				if (talonLB.getControlMode() == TalonControlMode.Speed)
-					talonLB.set(left/* \*rpm */);
+					talonLB.set(leftMotorSetPoint/* \*rpm */);
 				else
-					talonLB.set(left);
+					talonLB.set(leftMotorSetPoint);
 				break;
 			case off:
 				talonLB.set(0);

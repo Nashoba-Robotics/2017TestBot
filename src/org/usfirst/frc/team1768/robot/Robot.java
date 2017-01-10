@@ -58,6 +58,7 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
+		singleton = this;
 		initSmartDashboard();
 		Drive.init();
 	}
@@ -87,6 +88,7 @@ public class Robot extends IterativeRobot {
 		modeChooser.addDefault("Joystick-controlled", mode.joystick);
 		modeChooser.addObject("Manual input control", mode.manualInput);
 		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
+		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
 		SmartDashboard.putData("Choose control mode", modeChooser);
 	}
 
@@ -96,7 +98,6 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	public void disabledInit() {
-		Drive.getInstance().setMotorSpeed(0, 0);
 	}
 
 	public void disabledPeriodic() {

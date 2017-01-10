@@ -14,7 +14,7 @@ public class RobotMap {
 
 	// Talon ports
 	public static int talonLF = 0;
-	public static int talonRF = 1;
-	public static int talonLB = 2;
+	public static int talonRF = 2;
+	public static int talonLB = 1;
 	public static int talonRB = 3;
 }

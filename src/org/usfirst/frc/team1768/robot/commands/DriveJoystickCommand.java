@@ -19,11 +19,12 @@ public class DriveJoystickCommand extends Command {
 
 	@Override
 	protected void execute() {
-		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
+		switch (Robot.getInstance().modeChooser.getSelected()) {
 		case manualInput:
 		case joystick:
 		case tankDrive:
-			Drive.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValues()[0], OI.getInstance().getMotorSpeedValues()[1]);
+			double[]motorSpeedValues = OI.getInstance().getMotorSpeedValues();
+			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
 			break;
 		case arcadeDrive:
 			Drive.getInstance().arcadeDrive(OI.getInstance().getMotorSpeedValues()[0], OI.getInstance().getMotorSpeedValues()[1], false);

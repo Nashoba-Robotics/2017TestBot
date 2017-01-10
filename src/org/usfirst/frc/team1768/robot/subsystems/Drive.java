@@ -5,25 +5,71 @@ import org.usfirst.frc.team1768.robot.RobotMap;
 import org.usfirst.frc.team1768.robot.commands.DriveJoystickCommand;
 
 import com.ctre.CANTalon;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
-public class Drive extends Subsystem {
+import lib.NRMath;
+import lib.NRSubsystem;
+import lib.Periodic;
+import lib.SmartDashboardSource;
+
+public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic {
 	public static boolean driveEnabled = false;
 
 	private static Drive singleton;
 	CANTalon talonLF, talonRF, talonLB, talonRB;
 
-	public Drive() {
+	double leftMotorSetpoint = 0;
+	double rightMotorSetpoint = 0;
+
+	private static final double turn_F = 0;
+	private static final double turn_P = 0;
+	private static final double turn_I = 0;
+	private static final double turn_D = 0;
+
+	private static final int ticksPerRev = 0;
+
+	private Drive() {
 		if (driveEnabled) {
 			talonLF = new CANTalon(RobotMap.talonLF);
-			talonRF = new CANTalon(RobotMap.talonRF);
-			talonLB = new CANTalon(RobotMap.talonLB);
-			talonRB = new CANTalon(RobotMap.talonRB);
-
 			talonLF.enableBrakeMode(true);
+			talonLF.changeControlMode(TalonControlMode.Speed);
+			talonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonLF.setF(turn_F);
+			talonLF.setP(turn_P);
+			talonLF.setI(turn_I);
+			talonLF.setD(turn_D);
+			talonLF.configEncoderCodesPerRev(ticksPerRev);
+
+			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
+			talonRF.changeControlMode(TalonControlMode.Speed);
+			talonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonRF.setF(turn_F);
+			talonRF.setP(turn_P);
+			talonRF.setI(turn_I);
+			talonRF.setD(turn_D);
+			talonRF.configEncoderCodesPerRev(ticksPerRev);
+
+			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
+			talonLB.changeControlMode(TalonControlMode.Speed);
+			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonLB.setF(turn_F);
+			talonLB.setP(turn_P);
+			talonLB.setI(turn_I);
+			talonLB.setD(turn_D);
+			talonLB.configEncoderCodesPerRev(ticksPerRev);
+
+			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
+			talonRB.changeControlMode(TalonControlMode.Speed);
+			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonRB.setF(turn_F);
+			talonRB.setP(turn_P);
+			talonRB.setI(turn_I);
+			talonRB.setD(turn_D);
+			talonRB.configEncoderCodesPerRev(ticksPerRev);
 		}
 	}
 
@@ -38,63 +84,135 @@ public class Drive extends Subsystem {
 		}
 	}
 
+	/**
+	 * Sets left and right motor speeds to the speeds needed for the given move
+	 * and turn values, multiplied by the OI speed multiplier if the speed
+	 * multiplier parameter is true. If you don't care about the speed
+	 * multiplier parameter, you might want to use {@link arcadeDrive(double
+	 * move, double turn)}
+	 * 
+	 * @param move
+	 *            The speed, from -1 to 1 (inclusive), that the robot should go
+	 *            at. 1 is max forward, 0 is stopped, -1 is max backward
+	 * @param turn
+	 *            The speed, from -1 to 1 (inclusive), that the robot should
+	 *            turn at. 1 is max right, 0 is stopped, -1 is max left
+	 * @param speedMultiplier
+	 *            whether or not to use the OI speed multiplier It should really
+	 *            only be used for operator driving
+	 * 
+	 */
+	public void arcadeDrive(double move, double turn, boolean speedMultiplier) {
+		move = NRMath.limit(move);
+		turn = NRMath.limit(turn);
+		double leftMotorSpeed, rightMotorSpeed;
+		rightMotorSpeed = leftMotorSpeed = move;
+		leftMotorSpeed += turn;
+		rightMotorSpeed -= turn;
+
+		if (move > 0.0) {
+			if (turn > 0.0) {
+				leftMotorSpeed = move - turn;
+				rightMotorSpeed = Math.max(move, turn);
+			} else {
+				leftMotorSpeed = Math.max(move, -turn);
+				rightMotorSpeed = move + turn;
+			}
+		} else {
+			if (turn > 0.0) {
+				leftMotorSpeed = -Math.max(-move, turn);
+				rightMotorSpeed = move + turn;
+			} else {
+				leftMotorSpeed = move - turn;
+				rightMotorSpeed = -Math.max(-move, -turn);
+			}
+		}
+		setMotorSpeed(leftMotorSpeed, rightMotorSpeed);
+	}
+
+	public void setMotorSpeed(double left, double right) {
+		leftMotorSetpoint = left;// * rpm;
+		rightMotorSetpoint = right;// * rpm;
+
+		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
+		case tankDrive:
+		case arcadeDrive:
+			talonLF.set(left);
+			talonRF.set(right);
+			talonLB.set(left);
+			talonRB.set(right);
+			break;
+		case manualInput:
+		case joystick:
+			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
+			case on:
+				if (talonLF.getControlMode() == TalonControlMode.Speed)
+					talonLF.set(left/* \*rpm */);
+				else
+					talonLF.set(left);
+				break;
+			case off:
+				talonLF.set(0);
+				break;
+			}
+			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
+			case on:
+				if (talonLB.getControlMode() == TalonControlMode.Speed)
+					talonLB.set(left/* \*rpm */);
+				else
+					talonLB.set(left);
+				break;
+			case off:
+				talonLB.set(0);
+				break;
+			}
+			switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
+			case on:
+				if (talonRF.getControlMode() == TalonControlMode.Speed)
+					talonRF.set(right/* \*rpm */);
+				else
+					talonRF.set(right);
+				break;
+			case off:
+				talonLF.set(0);
+				break;
+			}
+			switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
+			case on:
+				if (talonRB.getControlMode() == TalonControlMode.Speed)
+					talonRB.set(right/* \*rpm */);
+				else
+					talonLF.set(right);
+				break;
+			case off:
+				talonLF.set(0);
+				break;
+			}
+		break;
+		}
+	}
+	
+
 	@Override
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveJoystickCommand());
 	}
 
-	/**
-	 * Sets the motor speed for the left and right motors A raw motor speed is
-	 * actually a scaled voltage value
-	 * 
-	 * @param left
-	 *            the left motor speed, from -1 to 1
-	 * @param right
-	 *            the right motor speed, from -1 to 1
-	 */
-	public void setRawMotorSpeed(double left, double right) {
-		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
-		case joystick:
-		case manualInput:
-			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
-			case on:
-				Drive.getInstance().talonLF.set(left);
-				break;
-			case off:
-				Drive.getInstance().talonLF.set(0);
-				break;
-			}
-			switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
-			case on:
-				Drive.getInstance().talonRF.set(left);
-				break;
-			case off:
-				Drive.getInstance().talonRF.set(0);
-				break;
-			}
-			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
-			case on:
-				Drive.getInstance().talonLB.set(left);
-				break;
-			case off:
-				Drive.getInstance().talonLB.set(0);
-				break;
-			}
-			switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
-			case on:
-				Drive.getInstance().talonRB.set(left);
-				break;
-			case off:
-				Drive.getInstance().talonRB.set(0);
-				break;
-			}
-			break;
-		case tankDrive:
-			Drive.getInstance().talonLF.set(left);
-			Drive.getInstance().talonRF.set(right);
-			Drive.getInstance().talonLB.set(left);
-			Drive.getInstance().talonRB.set(right);
-			break;
-		}
+	@Override
+	public void periodic() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void smartDashboardInfo() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void disable() {
+		Drive.getInstance().setMotorSpeed(0, 0);
+
 	}
 }

@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1768.robot;
 
-import org.usfirst.frc.team1768.robot.subsystems.Drive;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class OI {
 
 	public final static double JOYSTICK_DEAD_ZONE = 0.15;
-
-	public double manualMotorSpeed = 0;
 
 	private static OI singleton;
 
@@ -45,13 +41,19 @@ public class OI {
 		switch (selected) {
 		case joystick:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
-			motorSpeedValue[1] = 0;
+			motorSpeedValue[1] = snapDriveJoysticks(stickLeft.getY());
+			break;
 		case manualInput:
-			motorSpeedValue[0] = SmartDashboard.getNumber("Motor speed");
+			motorSpeedValue[0] = SmartDashboard.getNumber("Motor Speed", 0);
 			motorSpeedValue[1] = 0;
+			break;
 		case tankDrive:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
 			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getY());
+			break;
+		case arcadeDrive:
+			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
+			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getX());
 		}
 		return motorSpeedValue;
 	}

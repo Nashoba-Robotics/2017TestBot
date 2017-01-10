@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
 import org.usfirst.frc.team1768.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,16 +21,18 @@ public class Robot extends IterativeRobot {
 
 	public Command driveWall;
 
-	public static final Drive driveSubsystem = new Drive();
-
 	private static Robot singleton;
 
 	public static Robot getInstance() {
 		return singleton;
 	}
 
-	public SendableChooser modeChooser, motorLFChooser, motorRFChooser, motorLBChooser, motorRBChooser;
-
+	public SendableChooser<mode> modeChooser;
+	public SendableChooser<motorLFState> motorLFChooser;
+	public SendableChooser<motorRFState> motorRFChooser;
+	public SendableChooser<motorLBState> motorLBChooser;
+	public SendableChooser<motorRBState> motorRBChooser;
+	
 	public enum motorLFState {
 		on, off
 	}
@@ -47,7 +50,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public enum mode {
-		joystick, manualInput, tankDrive
+		joystick, manualInput, tankDrive, arcadeDrive
 	}
 
 	/**
@@ -60,23 +63,27 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void initSmartDashboard() {
-		motorLFChooser = new SendableChooser();
+		motorLFChooser = new SendableChooser<motorLFState>();
 		motorLFChooser.addDefault("Off", motorLFState.off);
 		motorLFChooser.addObject("On", motorLFState.on);
+		SmartDashboard.putData("Choose front left motor mode", motorLFChooser);
 
-		motorRFChooser = new SendableChooser();
+		motorRFChooser = new SendableChooser<motorRFState>();
 		motorRFChooser.addDefault("Off", motorRFState.off);
 		motorRFChooser.addObject("On", motorRFState.on);
+		SmartDashboard.putData("Choose front right motor mode", motorRFChooser);
 
-		motorLBChooser = new SendableChooser();
+		motorLBChooser = new SendableChooser<motorLBState>();
 		motorLBChooser.addDefault("Off", motorLBState.off);
 		motorLBChooser.addObject("On", motorLBState.on);
+		SmartDashboard.putData("Chose back left motor mode", motorLBChooser);
 
-		motorRBChooser = new SendableChooser();
+		motorRBChooser = new SendableChooser<motorRBState>();
 		motorRBChooser.addDefault("Off", motorRBState.off);
 		motorRBChooser.addObject("On", motorRBState.on);
+		SmartDashboard.putData("Choose back right motor mode", motorRBChooser);
 
-		modeChooser = new SendableChooser();
+		modeChooser = new SendableChooser<mode>();
 		modeChooser.addDefault("Joystick-controlled", mode.joystick);
 		modeChooser.addObject("Manual input control", mode.manualInput);
 		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
@@ -89,7 +96,7 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	public void disabledInit() {
-		Drive.getInstance().setRawMotorSpeed(0, 0);
+		Drive.getInstance().setMotorSpeed(0, 0);
 	}
 
 	public void disabledPeriodic() {

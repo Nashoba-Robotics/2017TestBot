@@ -90,6 +90,9 @@ public class Robot extends IterativeRobot {
 		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
 		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
 		SmartDashboard.putData("Choose control mode", modeChooser);
+		
+		SmartDashboard.putNumber("talonLF Enc: ", Drive.getInstance().talonLFEncVal);
+		SmartDashboard.putNumber("talonRF Enc: ", Drive.getInstance().talonRFENCVal);
 	}
 
 	/**

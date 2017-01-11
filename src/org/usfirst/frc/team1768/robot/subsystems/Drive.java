@@ -21,6 +21,9 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 	double leftMotorSetPoint = 0;
 	double rightMotorSetPoint = 0;
+	
+	public double talonLFEncVal;
+	public double talonRFENCVal;
 
 	private static final double turn_F = 0;
 	private static final double turn_P = 0;
@@ -40,6 +43,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonLF.setI(turn_I);
 			talonLF.setD(turn_D);
 			talonLF.configEncoderCodesPerRev(ticksPerRev);
+			talonLFEncVal = talonLF.getEncPosition();
 
 			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
@@ -50,26 +54,30 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonRF.setI(turn_I);
 			talonRF.setD(turn_D);
 			talonRF.configEncoderCodesPerRev(ticksPerRev);
+			talonRFENCVal = talonRF.getEncPosition();
+			
 
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
 			talonLB.changeControlMode(TalonControlMode.PercentVbus);
-			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonLB.set(talonLF.getDeviceID());
+			/*talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLB.setF(turn_F);
 			talonLB.setP(turn_P);
 			talonLB.setI(turn_I);
 			talonLB.setD(turn_D);
-			talonLB.configEncoderCodesPerRev(ticksPerRev);
+			talonLB.configEncoderCodesPerRev(ticksPerRev);*/
 
 			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
 			talonRB.changeControlMode(TalonControlMode.PercentVbus);
-			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talonRB.set(talonRF.getDeviceID());
+			/*talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRB.setF(turn_F);
 			talonRB.setP(turn_P);
 			talonRB.setI(turn_I);
 			talonRB.setD(turn_D);
-			talonRB.configEncoderCodesPerRev(ticksPerRev);
+			talonRB.configEncoderCodesPerRev(ticksPerRev);*/
 		}
 	}
 
@@ -132,7 +140,6 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 	public void setMotorSpeed(double left, double right) {
 		leftMotorSetPoint = -left;// * rpm;
-		rightMotorSetPoint = right;// * rpm;
 
 		System.out.println(Robot.getInstance().modeChooser.getSelected());
 		
@@ -148,12 +155,10 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 		case joystick:
 			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
 			case on:
-				if (talonLF.getControlMode() == TalonControlMode.Speed) {
+				if (talonLF.getControlMode() == TalonControlMode.PercentVbus)
 					talonLF.set(leftMotorSetPoint/* \*rpm */);
-				}
-				else {
-					talonLF.set(-leftMotorSetPoint);
-				}
+				else
+					talonLF.set(-leftMotorSetPoint); //Why should this be negative?
 				break;
 			case off:
 				talonLF.set(0);
@@ -161,7 +166,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			}
 			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
 			case on:
-				if (talonLB.getControlMode() == TalonControlMode.Speed)
+				if (talonLB.getControlMode() == TalonControlMode.PercentVbus)
 					talonLB.set(leftMotorSetPoint/* \*rpm */);
 				else
 					talonLB.set(leftMotorSetPoint);
@@ -172,24 +177,24 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			}
 			switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
 			case on:
-				if (talonRF.getControlMode() == TalonControlMode.Speed)
-					talonRF.set(right/* \*rpm */);
+				if (talonRF.getControlMode() == TalonControlMode.PercentVbus)
+					talonRF.set(leftMotorSetPoint/* \*rpm */);
 				else
-					talonRF.set(right);
+					talonRF.set(leftMotorSetPoint);
 				break;
 			case off:
-				talonLF.set(0);
+				talonRF.set(0);
 				break;
 			}
 			switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
 			case on:
-				if (talonRB.getControlMode() == TalonControlMode.Speed)
-					talonRB.set(right/* \*rpm */);
+				if (talonRB.getControlMode() == TalonControlMode.PercentVbus)
+					talonRB.set(leftMotorSetPoint/* \*rpm */);
 				else
-					talonLF.set(right);
+					talonRB.set(leftMotorSetPoint);
 				break;
 			case off:
-				talonLF.set(0);
+				talonRB.set(0);
 				break;
 			}
 		break;

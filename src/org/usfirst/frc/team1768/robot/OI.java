@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	
+	public double[] motorSpeedValue = new double[2];
 
 	public final static double JOYSTICK_DEAD_ZONE = 0.15;
 
@@ -36,7 +38,7 @@ public class OI {
 
 	// Motor joystick
 	public double[] getMotorSpeedValues() {
-		double[] motorSpeedValue = new double[2];
+		
 		Robot.mode selected = (Robot.mode) Robot.getInstance().modeChooser.getSelected();
 		switch (selected) {
 		case joystick:

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
 import org.usfirst.frc.team1768.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,7 +57,8 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-		singleton = new Robot();
+		if (singleton == null)
+			singleton = this;
 		initSmartDashboard();
 		Drive.init();
 	}
@@ -90,9 +90,6 @@ public class Robot extends IterativeRobot {
 		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
 		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
 		SmartDashboard.putData("Choose control mode", modeChooser);
-		
-		SmartDashboard.putNumber("talonLF Enc: ", Drive.getInstance().talonLFEncVal);
-		SmartDashboard.putNumber("talonRF Enc: ", Drive.getInstance().talonRFENCVal);
 	}
 
 	/**

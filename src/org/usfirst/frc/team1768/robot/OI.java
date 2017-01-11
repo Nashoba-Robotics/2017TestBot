@@ -39,7 +39,7 @@ public class OI {
 	// Motor joystick
 	public double[] getMotorSpeedValues() {
 		
-		Robot.mode selected = (Robot.mode) Robot.getInstance().modeChooser.getSelected();
+		Robot.mode selected = Robot.getInstance().modeChooser.getSelected();
 		switch (selected) {
 		case joystick:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1768.robot.subsystems;
 
+import org.usfirst.frc.team1768.robot.OI;
 import org.usfirst.frc.team1768.robot.Robot;
 import org.usfirst.frc.team1768.robot.RobotMap;
 import org.usfirst.frc.team1768.robot.commands.DriveJoystickCommand;
@@ -31,7 +32,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	double leftMotorSetPoint = 0;
 	double rightMotorSetPoint = 0;
 
-	private static final double turn_F = 1.0;
+	private static final double turn_F = 0.1212;
 	private static final double turn_P = 0;
 	private static final double turn_I = 0;
 	private static final double turn_D = 0;
@@ -139,8 +140,10 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	}
 
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetPoint = -left;
-		rightMotorSetPoint = right;
+		leftMotorSetPoint = -left * OI.getInstance().speedMultiplier;
+		rightMotorSetPoint = right * OI.getInstance().speedMultiplier;
+		
+		SmartDashboard.putString("realRPM", talonLB.getSpeed() + "  :  " + leftMotorSetPoint * RobotMap.MAX_RPM);
 
 		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
 		case tankDrive:

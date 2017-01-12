@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI {
 	
+	public double speedMultiplier = 0.5;
+	
 	public double[] motorSpeedValue = new double[2];
 
 	public final static double JOYSTICK_DEAD_ZONE = 0.15;

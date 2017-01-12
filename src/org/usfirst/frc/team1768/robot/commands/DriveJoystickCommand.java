@@ -19,13 +19,14 @@ public class DriveJoystickCommand extends NRCommand {
 
 	@Override
 	protected void onExecute() {
-		System.out.println(Drive.getInstance().talonLB.getSpeed());
+		//System.out.println(Drive.getInstance().talonLB.getSpeed());
 		double[]motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 		switch (Robot.getInstance().modeChooser.getSelected()) {
 		case manualInput:
 			//motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
 			break;
+			
 		case joystick:
 			//motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
@@ -35,7 +36,7 @@ public class DriveJoystickCommand extends NRCommand {
 			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
 			break;
 		case arcadeDrive:
-			Drive.getInstance().arcadeDrive(OI.getInstance().getMotorSpeedValues()[0], OI.getInstance().getMotorSpeedValues()[1], false);
+			Drive.getInstance().arcadeDrive(OI.getInstance().getMotorSpeedValues()[0], OI.getInstance().getMotorSpeedValues()[1], true);
 		}
 		
 	}

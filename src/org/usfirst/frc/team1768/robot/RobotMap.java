@@ -19,4 +19,5 @@ public class RobotMap {
 	public static final int talonRB = 3;
 	
 	public static final double WHEEL_DIAMETER = 3.5;
+	public static final double MAX_RPM = 1300;
 }

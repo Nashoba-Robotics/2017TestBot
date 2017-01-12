@@ -7,18 +7,19 @@ import org.usfirst.frc.team1768.robot.Robot;
 import org.usfirst.frc.team1768.robot.subsystems.Drive;
 
 public class DriveJoystickCommand extends NRCommand {
-
+	
 	public DriveJoystickCommand() {
 		requires(Drive.getInstance());
 	}
 
 	@Override
-	protected void initialize() {
-		// Nothing needs to be done on start
+	protected void onStart() {
+		
 	}
 
 	@Override
 	protected void onExecute() {
+		System.out.println(Drive.getInstance().talonLB.getSpeed());
 		double[]motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 		switch (Robot.getInstance().modeChooser.getSelected()) {
 		case manualInput:

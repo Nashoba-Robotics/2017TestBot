@@ -19,14 +19,14 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	public static boolean driveEnabled = true;
 
 	private static Drive singleton;
-	
-	private CANTalon talonLF;
-	private CANTalon talonRF;
-	private CANTalon talonLB;
-	private CANTalon talonRB;
-	
-	private TalonEncoder encLeft;
-	private TalonEncoder encRight;
+
+	public CANTalon talonLF;
+	public CANTalon talonRF;
+	public CANTalon talonLB;
+	public CANTalon talonRB;
+
+	public TalonEncoder encLeft;
+	public TalonEncoder encRight;
 
 	double leftMotorSetPoint = 0;
 	double rightMotorSetPoint = 0;
@@ -36,13 +36,13 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	private static final double turn_I = 0;
 	private static final double turn_D = 0;
 
-	private static final int ticksPerRev = 1025;
+	private static final int ticksPerRev = 1024;
 
 	private Drive() {
 		if (driveEnabled) {
 			talonLF = new CANTalon(RobotMap.talonLF);
 			talonLF.enableBrakeMode(true);
-			talonLF.changeControlMode(TalonControlMode.PercentVbus);
+			talonLF.changeControlMode(TalonControlMode.Speed);
 			talonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLF.setF(turn_F);
 			talonLF.setP(turn_P);
@@ -52,14 +52,14 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
-			talonRF.changeControlMode(TalonControlMode.PercentVbus);
+			talonRF.changeControlMode(TalonControlMode.Speed);
 			talonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRF.setF(turn_F);
 			talonRF.setP(turn_P);
 			talonRF.setI(turn_I);
 			talonRF.setD(turn_D);
 			talonRF.configEncoderCodesPerRev(ticksPerRev);
-			
+
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
 			talonLB.changeControlMode(TalonControlMode.Follower);
@@ -69,7 +69,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonRB.enableBrakeMode(true);
 			talonRB.changeControlMode(TalonControlMode.Follower);
 			talonRB.set(talonRF.getDeviceID());
-		
+
 			encLeft = new TalonEncoder(talonLB, false);
 			encLeft.setDistancePerRev(RobotMap.WHEEL_DIAMETER * Math.PI);
 			encLeft.setTicksPerRev(ticksPerRev);
@@ -78,7 +78,6 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			encRight.setDistancePerRev(RobotMap.WHEEL_DIAMETER * Math.PI);
 			encRight.setTicksPerRev(ticksPerRev);
 			encRight.reset();
-			
 		}
 	}
 
@@ -140,23 +139,27 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	}
 
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetPoint = -left;// * rpm;
+		leftMotorSetPoint = -left;
 		rightMotorSetPoint = right;
 
-		System.out.println(Robot.getInstance().modeChooser.getSelected());
-		
 		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
 		case tankDrive:
 		case arcadeDrive:
-			talonLF.set(leftMotorSetPoint);
-			talonRF.set(rightMotorSetPoint);
+			if (talonLF.getControlMode() == TalonControlMode.Speed)
+				talonLF.set(leftMotorSetPoint * RobotMap.MAX_RPM);
+			else
+				talonLF.set(leftMotorSetPoint);
+			if (talonRF.getControlMode() == TalonControlMode.Speed)
+				talonRF.set(rightMotorSetPoint * RobotMap.MAX_RPM);
+			else
+				talonRF.set(rightMotorSetPoint);
 			break;
 		case manualInput:
 		case joystick:
 			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
 			case on:
-				if (talonLF.getControlMode() == TalonControlMode.PercentVbus)
-					talonLF.set(leftMotorSetPoint/* \*rpm */);
+				if (talonLF.getControlMode() == TalonControlMode.Speed)
+					talonLF.set(leftMotorSetPoint * RobotMap.MAX_RPM);
 				else
 					talonLF.set(leftMotorSetPoint);
 				break;
@@ -166,8 +169,8 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			}
 			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
 			case on:
-				if (talonLB.getControlMode() == TalonControlMode.PercentVbus)
-					talonLB.set(leftMotorSetPoint/* \*rpm */);
+				if (talonLB.getControlMode() == TalonControlMode.Speed)
+					talonLB.set(leftMotorSetPoint * RobotMap.MAX_RPM);
 				else
 					talonLB.set(leftMotorSetPoint);
 				break;
@@ -197,10 +200,9 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 				talonRB.set(0);
 				break;
 			}
-		break;
+			break;
 		}
 	}
-	
 
 	@Override
 	public void initDefaultCommand() {

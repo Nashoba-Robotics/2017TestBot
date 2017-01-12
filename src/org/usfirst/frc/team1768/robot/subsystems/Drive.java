@@ -59,7 +59,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
-			talonLB.changeControlMode(TalonControlMode.PercentVbus);
+			talonLB.changeControlMode(TalonControlMode.Follower);
 			talonLB.set(talonLF.getDeviceID());
 			/*talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLB.setF(turn_F);
@@ -70,7 +70,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
-			talonRB.changeControlMode(TalonControlMode.PercentVbus);
+			talonRB.changeControlMode(TalonControlMode.Follower);
 			talonRB.set(talonRF.getDeviceID());
 			/*talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRB.setF(turn_F);

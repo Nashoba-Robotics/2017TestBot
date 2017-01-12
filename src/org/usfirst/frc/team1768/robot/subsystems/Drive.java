@@ -158,7 +158,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 				if (talonLF.getControlMode() == TalonControlMode.PercentVbus)
 					talonLF.set(leftMotorSetPoint/* \*rpm */);
 				else
-					talonLF.set(-leftMotorSetPoint); //Why should this be negative?
+					talonLF.set(leftMotorSetPoint);
 				break;
 			case off:
 				talonLF.set(0);

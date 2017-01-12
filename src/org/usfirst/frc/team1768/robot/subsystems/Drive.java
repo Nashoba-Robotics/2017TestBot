@@ -32,11 +32,15 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	double leftMotorSetPoint = 0;
 	double rightMotorSetPoint = 0;
 
-	private static final double turn_F = 0.1212;
-	private static final double turn_P = 0;
-	private static final double turn_I = 0;
-	private static final double turn_D = 0;
-
+	private static final double turn_F_LEFT = 0.1216;
+	private static final double turn_F_RIGHT = 0.1285;
+	private static final double turn_P_LEFT = 0;
+	private static final double turn_I_LEFT = 0;
+	private static final double turn_D_LEFT = 0;
+	private static final double turn_P_RIGHT = 0;
+	private static final double turn_I_RIGHT = 0;
+	private static final double turn_D_RIGHT = 0;
+	
 	private static final int ticksPerRev = 1024;
 
 	private Drive() {
@@ -45,20 +49,20 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonLF.enableBrakeMode(true);
 			talonLF.changeControlMode(TalonControlMode.Speed);
 			talonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			talonLF.setF(turn_F);
-			talonLF.setP(turn_P);
-			talonLF.setI(turn_I);
-			talonLF.setD(turn_D);
+			talonLF.setF(turn_F_LEFT);
+			talonLF.setP(turn_P_LEFT);
+			talonLF.setI(turn_I_LEFT);
+			talonLF.setD(turn_D_LEFT);
 			talonLF.configEncoderCodesPerRev(ticksPerRev);
 
 			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
 			talonRF.changeControlMode(TalonControlMode.Speed);
 			talonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			talonRF.setF(turn_F);
-			talonRF.setP(turn_P);
-			talonRF.setI(turn_I);
-			talonRF.setD(turn_D);
+			talonRF.setF(turn_F_RIGHT);
+			talonRF.setP(turn_P_RIGHT);
+			talonRF.setI(turn_I_RIGHT);
+			talonRF.setD(turn_D_RIGHT);
 			talonRF.configEncoderCodesPerRev(ticksPerRev);
 
 			talonLB = new CANTalon(RobotMap.talonLB);
@@ -143,8 +147,9 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 		leftMotorSetPoint = -left * OI.getInstance().speedMultiplier;
 		rightMotorSetPoint = right * OI.getInstance().speedMultiplier;
 		
-		SmartDashboard.putString("realRPM", talonLB.getSpeed() + "  :  " + leftMotorSetPoint * RobotMap.MAX_RPM);
-
+		SmartDashboard.putString("rightRPM", talonRB.getSpeed() + "  :  " + rightMotorSetPoint * RobotMap.MAX_RPM);
+		SmartDashboard.putString("leftRPM", -talonLB.getSpeed() + "  :  " + leftMotorSetPoint * RobotMap.MAX_RPM);
+		
 		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
 		case tankDrive:
 		case arcadeDrive:

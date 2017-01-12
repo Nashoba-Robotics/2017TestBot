@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI {
 	
-	public double speedMultiplier = 0.5;
+	public double speedMultiplier = 1.0;
 	
 	public double[] motorSpeedValue = new double[2];
 

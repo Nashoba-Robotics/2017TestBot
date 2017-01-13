@@ -55,13 +55,13 @@ public class Robot extends IterativeRobot {
 
 	public void initSmartDashboard() {
 		motorLFChooser = new SendableChooser<motorLFState>();
-		motorLFChooser.addDefault("Off", motorLFState.off);
-		motorLFChooser.addObject("On", motorLFState.on);
+		motorLFChooser.addDefault("Left Side Off", motorLFState.off);
+		motorLFChooser.addObject("Left Side On", motorLFState.on);
 		SmartDashboard.putData("Choose front left motor mode", motorLFChooser);
 
 		motorRFChooser = new SendableChooser<motorRFState>();
-		motorRFChooser.addDefault("Off", motorRFState.off);
-		motorRFChooser.addObject("On", motorRFState.on);
+		motorRFChooser.addDefault("Right Side Off", motorRFState.off);
+		motorRFChooser.addObject("Right Side On", motorRFState.on);
 		SmartDashboard.putData("Choose front right motor mode", motorRFChooser);
 
 		modeChooser = new SendableChooser<mode>();

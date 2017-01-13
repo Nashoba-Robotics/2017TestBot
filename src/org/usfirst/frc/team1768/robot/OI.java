@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1768.robot;
 
-import org.usfirst.frc.team1768.robot.subsystems.Drive;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

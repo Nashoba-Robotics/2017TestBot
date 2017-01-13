@@ -46,7 +46,7 @@ public class OI {
 		switch (selected) {
 		case manualInput:
 			motorSpeedValue[0] = -SmartDashboard.getNumber("Motor Speed", 0);
-			motorSpeedValue[1] = motorSpeedValue[0];
+			motorSpeedValue[1] = -SmartDashboard.getNumber("Motor Speed", 0);
 			break;
 		case tankDrive:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());

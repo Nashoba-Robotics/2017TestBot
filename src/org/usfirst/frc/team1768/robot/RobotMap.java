@@ -17,7 +17,9 @@ public class RobotMap {
 	public static final int talonRF = 2;
 	public static final int talonLB = 1;
 	public static final int talonRB = 3;
+	//TODO: Get shooterTalon port
+	public static final int shooterTalon = 1000;
 	
 	public static final double WHEEL_DIAMETER = 3.5;
-	public static final double MAX_RPM = 1300;
+	public static final double MAX_RPM = 200;
 }

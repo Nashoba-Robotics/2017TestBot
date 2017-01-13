@@ -85,6 +85,20 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		OI.getInstance().speedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 0);
+		Drive.getInstance().turn_P_LEFT = SmartDashboard.getNumber("P Left", 0);
+		Drive.getInstance().turn_P_RIGHT = SmartDashboard.getNumber("P Right", 0);
+		Drive.getInstance().turn_I_LEFT = SmartDashboard.getNumber("I Left", 0);
+		Drive.getInstance().turn_I_RIGHT = SmartDashboard.getNumber("I Right", 0);
+		Drive.getInstance().turn_D_LEFT = SmartDashboard.getNumber("D Left", 0);
+		Drive.getInstance().turn_D_RIGHT = SmartDashboard.getNumber("D Right", 0);
+		
+		Drive.getInstance().talonLB.setP(Drive.getInstance().turn_P_LEFT);
+		Drive.getInstance().talonLB.setI(Drive.getInstance().turn_I_LEFT);
+		Drive.getInstance().talonLB.setD(Drive.getInstance().turn_D_LEFT);
+		
+		Drive.getInstance().talonRB.setP(Drive.getInstance().turn_P_RIGHT);
+		Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
+		Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
 	}
 
 	/**

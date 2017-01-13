@@ -28,14 +28,14 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	double leftMotorSetPoint = 0;
 	double rightMotorSetPoint = 0;
 
-	public double turn_F_LEFT = 0.82;
-	public double turn_F_RIGHT = 1.0;
-	public double turn_P_LEFT = 0.0;
-	public double turn_I_LEFT = 0;
-	public double turn_D_LEFT = 0;
-	public double turn_P_RIGHT = 0;
-	public double turn_I_RIGHT = 0;
-	public double turn_D_RIGHT = 0;
+	public final double turn_F_LEFT = 0.873;
+	public final double turn_F_RIGHT = 0.892;
+	public final double turn_P_LEFT = 0.0;
+	public final double turn_I_LEFT = 0;
+	public final double turn_D_LEFT = 0;
+	public final double turn_P_RIGHT = 0;
+	public final double turn_I_RIGHT = 0;
+	public final double turn_D_RIGHT = 0;
 	
 	private static final int ticksPerRev = 1024;
 
@@ -70,13 +70,6 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonRF.enableBrakeMode(true);
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
-		
-			SmartDashboard.putNumber("P Left", 0);
-			SmartDashboard.putNumber("I Left", 0);
-			SmartDashboard.putNumber("D Left", 0);
-			SmartDashboard.putNumber("P Right", 0);
-			SmartDashboard.putNumber("I Right", 0);
-			SmartDashboard.putNumber("D Right", 0);
 		}
 	}
 

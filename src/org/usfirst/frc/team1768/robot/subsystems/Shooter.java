@@ -1,18 +1,21 @@
 package org.usfirst.frc.team1768.robot.subsystems;
 
+import org.usfirst.frc.team1768.robot.Robot;
 import org.usfirst.frc.team1768.robot.RobotMap;
+import org.usfirst.frc.team1768.robot.commands.ShooterConstantSpeedCommand;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import lib.NRSubsystem;
 import lib.Periodic;
 import lib.SmartDashboardSource;
 
 public class Shooter extends NRSubsystem implements SmartDashboardSource, Periodic {
 
-	//TODO: MAKE TRUE!!!!!!!!!!!!!!!!!
+	//TODO: MAKE TRUE!!!!!!!!!!!!!!!!
 	public static boolean shooterEnabled = false;
 	
 	private static Shooter singleton;
@@ -32,14 +35,13 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 		if (shooterEnabled) {
 			shooterTalon = new CANTalon(RobotMap.shooterTalon);
 			shooterTalon.enableBrakeMode(false);
-			shooterTalon.changeControlMode(TalonControlMode.Speed);
+			shooterTalon.changeControlMode(TalonControlMode.PercentVbus);
 			shooterTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			shooterTalon.setF(turn_F_SHOOTER);
 			shooterTalon.setP(turn_P_SHOOTER);
 			shooterTalon.setI(turn_I_SHOOTER);
 			shooterTalon.setD(turn_D_SHOOTER);
 			shooterTalon.configEncoderCodesPerRev(ticksPerRev);
-			
 		}
 	}
 	
@@ -54,28 +56,44 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 		}
 	}
 	
+	public void setMotorSpeed(double speed) {
+		shooterMotorSetPoint = speed;
+		
+		SmartDashboard.putString("Shooter Speed", shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint * RobotMap.MAX_SHOOTER_RPM);
+		
+		switch (Robot.getInstance().shooterChooser.getSelected()) {
+		case on:
+			// TODO: Remember to change back to PercentVbus
+			if(shooterTalon.getControlMode() == TalonControlMode.Speed) {
+				shooterTalon.set(shooterMotorSetPoint / RobotMap.MAX_SHOOTER_RPM);
+			}	
+			else
+				shooterTalon.set(shooterMotorSetPoint);
+			break;
+		case off:
+			shooterTalon.set(0);
+			break;
+		}
+	}
+	
 	@Override
 	public void periodic() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void smartDashboardInfo() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void disable() {
-		// TODO Auto-generated method stub
-		
+		Shooter.getInstance().setMotorSpeed(0);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-		// TODO Auto-generated method stub
-		
+		setDefaultCommand(new ShooterConstantSpeedCommand());
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1768.robot;
 
+import org.usfirst.frc.team1768.robot.subsystems.Drive;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,7 +23,8 @@ public class OI {
 
 	private OI() {
 
-		SmartDashboard.putNumber("Motor speed", 0);
+		SmartDashboard.putNumber("Speed Multiplier", speedMultiplier);
+		SmartDashboard.putNumber("Motor Speed", 0);
 
 		stickLeft = new Joystick(RobotMap.joystickLeftPort);
 		stickRight = new Joystick(RobotMap.joystickRightPort);
@@ -43,13 +46,9 @@ public class OI {
 		
 		Robot.mode selected = Robot.getInstance().modeChooser.getSelected();
 		switch (selected) {
-		case joystick:
-			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
-			motorSpeedValue[1] = snapDriveJoysticks(stickLeft.getY());
-			break;
 		case manualInput:
-			motorSpeedValue[0] = SmartDashboard.getNumber("Motor Speed", 0);
-			motorSpeedValue[1] = 0;
+			motorSpeedValue[0] = -SmartDashboard.getNumber("Motor Speed", 0);
+			motorSpeedValue[1] = motorSpeedValue[0];
 			break;
 		case tankDrive:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
@@ -58,6 +57,7 @@ public class OI {
 		case arcadeDrive:
 			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
 			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getX());
+			break;
 		}
 		return motorSpeedValue;
 	}

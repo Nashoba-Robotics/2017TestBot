@@ -29,8 +29,6 @@ public class Robot extends IterativeRobot {
 	public SendableChooser<mode> modeChooser;
 	public SendableChooser<motorLFState> motorLFChooser;
 	public SendableChooser<motorRFState> motorRFChooser;
-	public SendableChooser<motorLBState> motorLBChooser;
-	public SendableChooser<motorRBState> motorRBChooser;
 	
 	public enum motorLFState {
 		on, off
@@ -40,16 +38,8 @@ public class Robot extends IterativeRobot {
 		on, off
 	}
 
-	public enum motorLBState {
-		on, off
-	}
-
-	public enum motorRBState {
-		on, off
-	}
-
 	public enum mode {
-		joystick, manualInput, tankDrive, arcadeDrive
+		manualInput, tankDrive, arcadeDrive
 	}
 
 	/**
@@ -74,18 +64,7 @@ public class Robot extends IterativeRobot {
 		motorRFChooser.addObject("On", motorRFState.on);
 		SmartDashboard.putData("Choose front right motor mode", motorRFChooser);
 
-		motorLBChooser = new SendableChooser<motorLBState>();
-		motorLBChooser.addDefault("Off", motorLBState.off);
-		motorLBChooser.addObject("On", motorLBState.on);
-		SmartDashboard.putData("Chose back left motor mode", motorLBChooser);
-
-		motorRBChooser = new SendableChooser<motorRBState>();
-		motorRBChooser.addDefault("Off", motorRBState.off);
-		motorRBChooser.addObject("On", motorRBState.on);
-		SmartDashboard.putData("Choose back right motor mode", motorRBChooser);
-
 		modeChooser = new SendableChooser<mode>();
-		modeChooser.addDefault("Joystick-controlled", mode.joystick);
 		modeChooser.addObject("Manual input control", mode.manualInput);
 		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
 		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
@@ -105,6 +84,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		OI.getInstance().speedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 0);
 	}
 
 	/**

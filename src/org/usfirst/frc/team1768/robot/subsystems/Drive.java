@@ -147,8 +147,8 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 		leftMotorSetPoint = -left * OI.getInstance().speedMultiplier;
 		rightMotorSetPoint = right * OI.getInstance().speedMultiplier;
 		
-		SmartDashboard.putString("rightRPM", talonRB.getSpeed() + "  :  " + rightMotorSetPoint * RobotMap.MAX_RPM);
-		SmartDashboard.putString("leftRPM", -talonLB.getSpeed() + "  :  " + leftMotorSetPoint * RobotMap.MAX_RPM);
+		//SmartDashboard.putString("rightRPM", talonRB.getSpeed() + "  :  " + rightMotorSetPoint * RobotMap.MAX_RPM);
+		//SmartDashboard.putString("leftRPM", -talonLB.getSpeed() + "  :  " + leftMotorSetPoint * RobotMap.MAX_RPM);
 		
 		switch ((Robot.mode) Robot.getInstance().modeChooser.getSelected()) {
 		case tankDrive:
@@ -163,7 +163,6 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 				talonRF.set(rightMotorSetPoint);
 			break;
 		case manualInput:
-		case joystick:
 			switch ((Robot.motorLFState) Robot.getInstance().motorLFChooser.getSelected()) {
 			case on:
 				if (talonLF.getControlMode() == TalonControlMode.Speed)
@@ -175,37 +174,15 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 				talonLF.set(0);
 				break;
 			}
-			switch ((Robot.motorLBState) Robot.getInstance().motorLBChooser.getSelected()) {
-			case on:
-				if (talonLB.getControlMode() == TalonControlMode.Speed)
-					talonLB.set(leftMotorSetPoint * RobotMap.MAX_RPM);
-				else
-					talonLB.set(leftMotorSetPoint);
-				break;
-			case off:
-				talonLB.set(0);
-				break;
-			}
 			switch ((Robot.motorRFState) Robot.getInstance().motorRFChooser.getSelected()) {
 			case on:
-				if (talonRF.getControlMode() == TalonControlMode.PercentVbus)
-					talonRF.set(leftMotorSetPoint/* \*rpm */);
+				if (talonRF.getControlMode() == TalonControlMode.Speed)
+					talonRF.set(rightMotorSetPoint * RobotMap.MAX_RPM);
 				else
-					talonRF.set(leftMotorSetPoint);
+					talonRF.set(rightMotorSetPoint);
 				break;
 			case off:
 				talonRF.set(0);
-				break;
-			}
-			switch ((Robot.motorRBState) Robot.getInstance().motorRBChooser.getSelected()) {
-			case on:
-				if (talonRB.getControlMode() == TalonControlMode.PercentVbus)
-					talonRB.set(leftMotorSetPoint/* \*rpm */);
-				else
-					talonRB.set(leftMotorSetPoint);
-				break;
-			case off:
-				talonRB.set(0);
 				break;
 			}
 			break;

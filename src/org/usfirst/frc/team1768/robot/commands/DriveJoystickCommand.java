@@ -23,16 +23,7 @@ public class DriveJoystickCommand extends NRCommand {
 		double[]motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 		switch (Robot.getInstance().modeChooser.getSelected()) {
 		case manualInput:
-			//motorSpeedValues = OI.getInstance().getMotorSpeedValues();
-			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
-			break;
-			
-		case joystick:
-			//motorSpeedValues = OI.getInstance().getMotorSpeedValues();
-			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
-			break;
 		case tankDrive:
-			//motorSpeedValues = OI.getInstance().getMotorSpeedValues();
 			Drive.getInstance().setMotorSpeed(motorSpeedValues[0], motorSpeedValues[1]);
 			break;
 		case arcadeDrive:

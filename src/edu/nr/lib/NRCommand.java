@@ -1,5 +1,7 @@
 package edu.nr.lib;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,6 +12,68 @@ import edu.wpi.first.wpilibj.command.Command;
 public class NRCommand extends Command {
 
 	boolean forceCancel = false;
+	
+	ArrayList<NRSubsystem> subsystems = new ArrayList<NRSubsystem>();
+	
+	NRCommand(ArrayList<NRSubsystem> subsystems) {
+		super();
+		this.subsystems = subsystems;
+		requires(subsystems);
+	}
+
+	/**
+	 * Constructor used to set this commands visible name in SmartDashboard
+	 * 
+	 * @param name
+	 */
+	public NRCommand(ArrayList<NRSubsystem> subsystems, String name) {
+		super(name);
+		this.subsystems = subsystems;
+		requires(subsystems);
+	}
+
+	public NRCommand(ArrayList<NRSubsystem> subsystems, String name, double timeout) {
+		super(name, timeout);
+		this.subsystems = subsystems;
+		requires(subsystems);
+	}
+
+	public NRCommand(ArrayList<NRSubsystem> subsystems, double timeout) {
+		super(timeout);
+		this.subsystems = subsystems;
+		requires(subsystems);
+	}
+	
+	public NRCommand(NRSubsystem subsystem) {
+		super();
+		subsystems.add(subsystem);
+		requires(subsystems);
+	}
+
+	/**
+	 * Constructor used to set this commands visible name in SmartDashboard
+	 * 
+	 * @param name
+	 */
+	public NRCommand(NRSubsystem subsystem, String name) {
+		super(name);
+		subsystems.add(subsystem);
+		requires(subsystems);
+	}
+
+	public NRCommand(NRSubsystem subsystem, String name, double timeout) {
+		super(name, timeout);
+		subsystems.add(subsystem);
+		requires(subsystems);
+	}
+
+	public NRCommand(NRSubsystem subsystem, double timeout) {
+		super(timeout);
+		subsystems.add(subsystem);
+		requires(subsystems);
+	}
+	
+
 	
 	public NRCommand() {
 		super();
@@ -30,6 +94,12 @@ public class NRCommand extends Command {
 
 	public NRCommand(double timeout) {
 		super(timeout);
+	}
+	
+	private void requires(ArrayList<NRSubsystem> subsystems) {
+		for(NRSubsystem s : subsystems) {
+			requires(s);
+		}
 	}
 
 	private boolean reset;
@@ -70,10 +140,17 @@ public class NRCommand extends Command {
 		onExecute();
 	}
 
+	private void disableSubsystems() {
+		for(NRSubsystem s : subsystems) {
+			s.disable();
+		}
+	}
+	
 	@Override
 	protected final void end() {
 		reset = true;
 		forceCancel = false;
+		disableSubsystems();
 		onEnd(false);
 	}
 
@@ -81,6 +158,7 @@ public class NRCommand extends Command {
 	protected final void interrupted() {
 		reset = true;
 		forceCancel = false;
+		disableSubsystems();
 		onEnd(true);
 	}
 

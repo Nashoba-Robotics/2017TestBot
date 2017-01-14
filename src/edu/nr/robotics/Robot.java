@@ -1,7 +1,9 @@
 
 package edu.nr.robotics;
 
+import edu.nr.lib.DoNothingCommand;
 import edu.nr.robotics.subsystems.Drive;
+import edu.nr.robotics.subsystems.EnableMotionProfile;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -59,27 +61,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void initSmartDashboard() {
-		motorLFChooser = new SendableChooser<motorLFState>();
-		motorLFChooser.addDefault("Left Side Off", motorLFState.off);
-		motorLFChooser.addObject("Left Side On", motorLFState.on);
-		SmartDashboard.putData("Choose front left motor mode", motorLFChooser);
-
-		motorRFChooser = new SendableChooser<motorRFState>();
-		motorRFChooser.addDefault("Right Side Off", motorRFState.off);
-		motorRFChooser.addObject("Right Side On", motorRFState.on);
-		SmartDashboard.putData("Choose front right motor mode", motorRFChooser);
-
-		shooterChooser = new SendableChooser<shooterState>();
-		shooterChooser.addDefault("Shooter on", shooterState.on);
-		shooterChooser.addDefault("Shooter off", shooterState.off);
-		SmartDashboard.putData("Choose shooter mode", shooterChooser);
-		
-		modeChooser = new SendableChooser<mode>();
-		modeChooser.addObject("Manual input control", mode.manualInput);
-		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
-		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
-		SmartDashboard.putData("Choose control mode", modeChooser);
-	
+		SmartDashboard.putData("Enable Profiler", new EnableMotionProfile());
+		SmartDashboard.putData("Cancel Profiler", new DoNothingCommand(Drive.getInstance()));
 	}
 
 	/**
@@ -106,7 +89,6 @@ public class Robot extends IterativeRobot {
 		Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
 		Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
 		}
-		RobotMap.SHOOTER_GOAL_SPEED = SmartDashboard.getNumber("Goal Shooter Speed", 0);
 	}
 
 	/**

@@ -18,6 +18,7 @@ public class DriveJoystickCommand extends NRCommand {
 			break;
 		case on:
 			Drive.getInstance().arcadeDrive(motorSpeedValues[0], motorSpeedValues[1], false);
+			break;
 		}
 	}
 }

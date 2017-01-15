@@ -25,7 +25,7 @@ public class OI {
 		SmartDashboard.putNumber("kd", Drive.getInstance().kd);
 		SmartDashboard.putNumber("kv", Drive.getInstance().kv);
 		SmartDashboard.putNumber("kp theta", Drive.getInstance().kp_theta);
-		SmartDashboard.putNumber("Distance to travel", 0);
+		SmartDashboard.putNumber("Distance to travel", 180);//inches
 		
 		stickLeft = new Joystick(RobotMap.joystickLeftPort);
 		stickRight = new Joystick(RobotMap.joystickRightPort);

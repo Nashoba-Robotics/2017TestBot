@@ -22,7 +22,7 @@ import edu.nr.robotics.RobotMap;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import jaci.pathfinder.Waypoint;
+//import jaci.pathfinder.Waypoint;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 	
@@ -41,7 +41,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public double rightMotorSetPoint = 0;
 
 	public final double turn_F_LEFT = 0.873;
-	public final double turn_F_RIGHT = 0.892;
+	public final double turn_F_RIGHT = .93;
 	public final double turn_P_LEFT = 0.0;
 	public final double turn_I_LEFT = 0;
 	public final double turn_D_LEFT = 0;
@@ -53,7 +53,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	PIDSourceType type = PIDSourceType.kRate;
 
-	public double ka = 0.01, kp = 0.5, kd = 0.0, kv = 1.0 / RobotMap.MAX_RPS, kp_theta = 0.075;
+	public double ka = 0.01, kp = 8.0, kd = 0.0, kv = 1.0 / RobotMap.MAX_RPS, kp_theta = 0.15;
 
 	private Drive() {
 		if (driveEnabled) {
@@ -177,6 +177,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			pidWrite(left, right);
 			break;
 		case on:
+			rightMotorSetPoint = right;
+			leftMotorSetPoint = -left;
 			if (talonLB.getControlMode() == TalonControlMode.Speed)
 				talonLB.set(leftMotorSetPoint * RobotMap.MAX_RPS * 60);
 			else
@@ -239,7 +241,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		profiler.setKV(SmartDashboard.getNumber("kv", 0));
 		profiler.setKP_theta(SmartDashboard.getNumber("kp theta", 0));
 		
-		profiler.setTrajectory(new OneDimensionalTrajectorySimple(10, RobotMap.MAX_RPS, RobotMap.MAX_RPS/2, RobotMap.MAX_ACC));
+		profiler.setTrajectory(new OneDimensionalTrajectorySimple(SmartDashboard.getNumber("Distance to travel", 0) / RobotMap.WHEEL_CIRCUMFERENCE, RobotMap.MAX_RPS, RobotMap.MAX_RPS/2, RobotMap.MAX_ACC));
 		profiler.enable();
 	}
 

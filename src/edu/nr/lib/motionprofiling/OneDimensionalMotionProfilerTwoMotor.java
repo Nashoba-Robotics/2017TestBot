@@ -126,6 +126,8 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 			source.setPIDSourceType(PIDSourceType.kDisplacement);
 			SmartDashboard.putString("Motion Profiler X Left", source.pidGetLeft() + ":" + (positionGoal + initialPositionLeft));
 			SmartDashboard.putString("Motion Profiler X Right", source.pidGetRight() + ":" + (positionGoal + initialPositionRight));
+
+			SmartDashboard.putNumber("Motion Profiler Angle Error", gyroCorrection.getAngleErrorDegrees());
 		}
 		
 		prevTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();

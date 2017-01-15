@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Cancel Profiler", new DoNothingCommand(Drive.getInstance()));
 		
 		joystickChooser = new SendableChooser<joystick>();
-		joystickChooser.addDefault("Joystick", joystick.on);
+		joystickChooser.addObject("Joystick", joystick.on);
 		joystickChooser.addDefault("Motion profiling", joystick.off);
 		
 		SmartDashboard.putData("Joystick Chooser", joystickChooser);

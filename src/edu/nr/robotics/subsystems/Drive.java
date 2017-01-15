@@ -28,7 +28,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	
 	public static boolean driveEnabled = true;
 
-	TwoDimensionalMotionProfilerPathfinder profiler;
+	OneDimensionalMotionProfilerTwoMotor profiler;
 
 	private static Drive singleton;
 
@@ -89,7 +89,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
 
-			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta, RobotMap.MAX_RPS, RobotMap.MAX_ACC, RobotMap.MAX_JERK, ticksPerRev, RobotMap.WHEEL_DIAMETER);
+			profiler = new OneDimensionalMotionProfilerTwoMotor(this, this, kv, ka, kp, kd, kp_theta);
 
 			new Thread(new Runnable() {
 				@Override
@@ -239,13 +239,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		profiler.setKV(SmartDashboard.getNumber("kv", 0));
 		profiler.setKP_theta(SmartDashboard.getNumber("kp theta", 0));
 		
-		Waypoint[] points = new Waypoint[] {
-				new Waypoint(0.0,0.0, 0.0),
-				new Waypoint(1.0,2.0, 0.0),
-				new Waypoint(3.0,4.0, 0.0)
-		};
-		
-		profiler.setTrajectory(points);
+		profiler.setTrajectory(new OneDimensionalTrajectorySimple(10, RobotMap.MAX_RPS, RobotMap.MAX_RPS/2, RobotMap.MAX_ACC));
 		profiler.enable();
 	}
 

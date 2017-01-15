@@ -2,6 +2,7 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.DoNothingCommand;
+import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.robotics.subsystems.Drive;
 import edu.nr.robotics.subsystems.EnableMotionProfile;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -28,25 +29,10 @@ public class Robot extends IterativeRobot {
 		return singleton;
 	}
 
-	public SendableChooser<mode> modeChooser;
-	public SendableChooser<motorLFState> motorLFChooser;
-	public SendableChooser<motorRFState> motorRFChooser;
-	public SendableChooser<shooterState> shooterChooser;
-	
-	public enum motorLFState {
-		on, off
-	}
+	public SendableChooser<joystick> joystickChooser;
 
-	public enum motorRFState {
+	public enum joystick {
 		on, off
-	}
-
-	public enum shooterState {
-		on, off
-	}
-	
-	public enum mode {
-		manualInput, tankDrive, arcadeDrive
 	}
 
 	/**
@@ -63,6 +49,12 @@ public class Robot extends IterativeRobot {
 	public void initSmartDashboard() {
 		SmartDashboard.putData("Enable Profiler", new EnableMotionProfile());
 		SmartDashboard.putData("Cancel Profiler", new DoNothingCommand(Drive.getInstance()));
+		
+		joystickChooser = new SendableChooser<joystick>();
+		joystickChooser.addDefault("Joystick", joystick.on);
+		joystickChooser.addDefault("Motion profiling", joystick.off);
+		
+		SmartDashboard.putData("Joystick Chooser", joystickChooser);
 	}
 
 	/**
@@ -78,16 +70,15 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		OI.getInstance().speedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 0);
 		
-		if(Drive.getInstance().talonLB != null) {
-		Drive.getInstance().talonLB.setP(Drive.getInstance().turn_P_LEFT);
-		Drive.getInstance().talonLB.setI(Drive.getInstance().turn_I_LEFT);
-		Drive.getInstance().talonLB.setD(Drive.getInstance().turn_D_LEFT);
-		
-		Drive.getInstance().talonRB.setP(Drive.getInstance().turn_P_RIGHT);
-		Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
-		Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
+		if (Drive.getInstance().talonLB != null) {
+			Drive.getInstance().talonLB.setP(Drive.getInstance().turn_P_LEFT);
+			Drive.getInstance().talonLB.setI(Drive.getInstance().turn_I_LEFT);
+			Drive.getInstance().talonLB.setD(Drive.getInstance().turn_D_LEFT);
+
+			Drive.getInstance().talonRB.setP(Drive.getInstance().turn_P_RIGHT);
+			Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
+			Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
 		}
 	}
 

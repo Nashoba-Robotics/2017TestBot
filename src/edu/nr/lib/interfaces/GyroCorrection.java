@@ -27,7 +27,7 @@ public abstract class GyroCorrection
 		return this.getTurnValue(DEFAULT_KP_THETA);
 	}
 	
-	protected abstract double getAngleErrorDegrees();
+	public abstract double getAngleErrorDegrees();
 	public abstract void reset();
 		
 	/**

@@ -12,4 +12,9 @@ public class EnableMotionProfile extends NRCommand {
 	public void onStart() {
 		Drive.getInstance().enableProfiler();
 	}
+
+	@Override
+	public boolean isFinishedNR() {
+		return false;
+	}
 }

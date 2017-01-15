@@ -181,4 +181,23 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 		return trajectory;
 	}
 	
+	public void setKA(double ka) {
+		this.ka = ka;
+	}
+	
+	public void setKP(double kp) {
+		this.kp = kp;
+	}
+	
+	public void setKD(double kd) {
+		this.kd = kd;
+	}
+
+	public void setKV(double kv) {
+		this.kv = kv;
+	}
+
+	public void setKP_theta(double kp_theta) {
+		this.kp_theta = kp_theta;
+	}
 }

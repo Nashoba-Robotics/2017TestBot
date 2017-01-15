@@ -5,24 +5,30 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.AngleUnit;
 import edu.nr.lib.DoNothingCommand;
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NRSubsystem;
+import edu.nr.lib.NavX;
 import edu.nr.lib.Periodic;
 import edu.nr.lib.SmartDashboardSource;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
-import edu.nr.robotics.OI;
+import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Waypoint;
 
-public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic, DoublePIDOutput, DoublePIDSource {
+public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
+	
 	public static boolean driveEnabled = true;
+
+	TwoDimensionalMotionProfilerPathfinder profiler;
 
 	private static Drive singleton;
 
@@ -42,15 +48,13 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	public final double turn_P_RIGHT = 0;
 	public final double turn_I_RIGHT = 0;
 	public final double turn_D_RIGHT = 0;
-	
-	private static final int ticksPerRev = 1024;
-	
-	OneDimensionalMotionProfilerTwoMotor profiler;
+
+	private static final int ticksPerRev = 256;
 
 	PIDSourceType type = PIDSourceType.kRate;
-	
-	private double ka, kp, kd, kv, kp_theta;
-	
+
+	public double ka = 0.01, kp = 0.5, kd = 0.0, kv = 1.0 / RobotMap.MAX_RPS, kp_theta = 0.075;
+
 	private Drive() {
 		if (driveEnabled) {
 			talonLB = new CANTalon(RobotMap.talonLB);
@@ -84,17 +88,22 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			talonRF.enableBrakeMode(true);
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
-			
-			profiler = new OneDimensionalMotionProfilerTwoMotor(this, this, kv, ka, kp, kd, kp_theta);
-			
-			new Thread( new Runnable() {
+
+			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta, RobotMap.MAX_RPS, RobotMap.MAX_ACC, RobotMap.MAX_JERK, ticksPerRev, RobotMap.WHEEL_DIAMETER);
+
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					while(true) {
+					while (true) {
 						SmartDashboard.putNumber("rightRPM", talonRB.getSpeed());
 						SmartDashboard.putNumber("leftRPM", -talonLB.getSpeed());
+						SmartDashboard.putNumber("rightPos", talonRB.getPosition());
+						SmartDashboard.putNumber("leftPos", -talonLB.getPosition());
+
+						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw(AngleUnit.DEGREE));
+
 						try {
-							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(3);
+							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(8);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -159,34 +168,37 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 				rightMotorSpeed = -Math.max(-move, -turn);
 			}
 		}
-		pidWrite(leftMotorSpeed, rightMotorSpeed);
+		setMotorSpeed(leftMotorSpeed, rightMotorSpeed);
 	}
-		
-	@Override
-	public void pidWrite(double left, double right) {
-		talonLB.set(-left * RobotMap.MAX_RPM);
-		talonRB.set(right * RobotMap.MAX_RPM);
+
+	public void setMotorSpeed(double left, double right) {
+		switch(Robot.getInstance().joystickChooser.getSelected()) {
+		case off:
+			pidWrite(left, right);
+			break;
+		case on:
+			if (talonLB.getControlMode() == TalonControlMode.Speed)
+				talonLB.set(leftMotorSetPoint * RobotMap.MAX_RPS * 60);
+			else
+				talonLB.set(leftMotorSetPoint);
+			if (talonRB.getControlMode() == TalonControlMode.Speed)
+				talonRB.set(rightMotorSetPoint * RobotMap.MAX_RPS * 60);
+			else
+				talonRB.set(rightMotorSetPoint);
+			break;
+		}
 	}
 
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(new DoNothingCommand());
-	}
-
-	@Override
-	public void periodic() {
-		
-	}
-
-	@Override
-	public void smartDashboardInfo() {
+		setDefaultCommand(new DriveJoystickCommand());
 	}
 
 	@Override
 	public void disable() {
-		Drive.getInstance().pidWrite(0, 0);
+		Drive.getInstance().setMotorSpeed(0, 0);
 		Command c = getCurrentCommand();
-		if(c != null) {
+		if (c != null) {
 			c.cancel();
 		}
 		disableProfiler();
@@ -204,28 +216,46 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 	@Override
 	public double pidGetLeft() {
-		if(type == PIDSourceType.kRate) {
-			return talonLB.getSpeed();
+		if (type == PIDSourceType.kRate) {
+			return -talonLB.getSpeed() / 60;
 		} else {
-			return talonLB.getPosition();
+			return -talonLB.getPosition();
 		}
 	}
 
 	@Override
 	public double pidGetRight() {
-		if(type == PIDSourceType.kRate) {
-			return talonRB.getSpeed();
+		if (type == PIDSourceType.kRate) {
+			return -talonRB.getSpeed() / 60;
 		} else {
-			return talonRB.getPosition();
+			return -talonRB.getPosition();
 		}
 	}
 
 	public void enableProfiler() {
-		profiler.setTrajectory(new OneDimensionalTrajectorySimple(10 /*rotations*/, RobotMap.MAX_RPM, RobotMap.MAX_RPM/2, RobotMap.MAX_ACC));
+		profiler.setKA(SmartDashboard.getNumber("ka", 0));
+		profiler.setKP(SmartDashboard.getNumber("kp", 0));
+		profiler.setKD(SmartDashboard.getNumber("kd", 0));
+		profiler.setKV(SmartDashboard.getNumber("kv", 0));
+		profiler.setKP_theta(SmartDashboard.getNumber("kp theta", 0));
+		
+		Waypoint[] points = new Waypoint[] {
+				new Waypoint(0.0,0.0, 0.0),
+				new Waypoint(1.0,2.0, 0.0),
+				new Waypoint(3.0,4.0, 0.0)
+		};
+		
+		profiler.setTrajectory(points);
 		profiler.enable();
 	}
-	
+
 	public void disableProfiler() {
 		profiler.disable();
+	}
+
+	@Override
+	public void pidWrite(double left, double right) {
+		talonLB.set(left * RobotMap.MAX_RPS * 60);
+		talonRB.set(-right * RobotMap.MAX_RPS * 60);
 	}
 }

@@ -17,7 +17,8 @@ public class ShooterConstantSpeedCommand extends NRCommand{
 	}
 
 	protected void onExecute() {
-		//Shooter.getInstance().setMotorSpeed(RobotMap.SHOOTER_GOAL_SPEED);
-		Shooter.getInstance().setMotorSpeed(1);
+		Shooter.getInstance().setMotorSpeed(RobotMap.SHOOTER_GOAL_SPEED);
+		//Shooter.getInstance().setMotorSpeed(1);
 	}
+	
 }

@@ -42,35 +42,6 @@ public class OI {
 
 	// Motor joystick
 	public double[] getMotorSpeedValues() {
-		
-		Robot.mode selected = Robot.getInstance().modeChooser.getSelected();
-		switch (selected) {
-		case manualInput:
-			motorSpeedValue[0] = -SmartDashboard.getNumber("Motor Speed", 0);
-			motorSpeedValue[1] = -SmartDashboard.getNumber("Motor Speed", 0);
-			break;
-		case tankDrive:
-			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
-			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getY());
-			break;
-		case arcadeDrive:
-			motorSpeedValue[0] = snapDriveJoysticks(stickLeft.getY());
-			motorSpeedValue[1] = snapDriveJoysticks(stickRight.getX());
-			break;
-		}
 		return motorSpeedValue;
-	}
-
-	private static double snapDriveJoysticks(double value) {
-		if (Math.abs(value) < JOYSTICK_DEAD_ZONE) {
-			value = 0;
-		} else if (value > 0) {
-			value -= JOYSTICK_DEAD_ZONE;
-		} else {
-			value += JOYSTICK_DEAD_ZONE;
-		}
-		value /= 1 - JOYSTICK_DEAD_ZONE;
-
-		return value;
 	}
 }

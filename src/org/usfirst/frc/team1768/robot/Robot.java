@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc.team1768.robot.subsystems.Drive;
+import org.usfirst.frc.team1768.robot.subsystems.Shooter;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,25 +27,10 @@ public class Robot extends IterativeRobot {
 		return singleton;
 	}
 
-	public SendableChooser<mode> modeChooser;
-	public SendableChooser<motorLFState> motorLFChooser;
-	public SendableChooser<motorRFState> motorRFChooser;
 	public SendableChooser<shooterState> shooterChooser;
-	
-	public enum motorLFState {
-		on, off
-	}
-
-	public enum motorRFState {
-		on, off
-	}
 
 	public enum shooterState {
 		on, off
-	}
-	
-	public enum mode {
-		manualInput, tankDrive, arcadeDrive
 	}
 
 	/**
@@ -55,31 +41,15 @@ public class Robot extends IterativeRobot {
 		if (singleton == null)
 			singleton = this;
 		initSmartDashboard();
-		Drive.init();
+		Shooter.init();
 	}
 
 	public void initSmartDashboard() {
-		motorLFChooser = new SendableChooser<motorLFState>();
-		motorLFChooser.addDefault("Left Side Off", motorLFState.off);
-		motorLFChooser.addObject("Left Side On", motorLFState.on);
-		SmartDashboard.putData("Choose front left motor mode", motorLFChooser);
-
-		motorRFChooser = new SendableChooser<motorRFState>();
-		motorRFChooser.addDefault("Right Side Off", motorRFState.off);
-		motorRFChooser.addObject("Right Side On", motorRFState.on);
-		SmartDashboard.putData("Choose front right motor mode", motorRFChooser);
-
 		shooterChooser = new SendableChooser<shooterState>();
 		shooterChooser.addDefault("Shooter on", shooterState.on);
 		shooterChooser.addDefault("Shooter off", shooterState.off);
 		SmartDashboard.putData("Choose shooter mode", shooterChooser);
-		
-		modeChooser = new SendableChooser<mode>();
-		modeChooser.addObject("Manual input control", mode.manualInput);
-		modeChooser.addObject("Tank-drive Input", mode.tankDrive);
-		modeChooser.addObject("Arcade-drive Input", mode.arcadeDrive);
-		SmartDashboard.putData("Choose control mode", modeChooser);
-	
+
 	}
 
 	/**
@@ -95,17 +65,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		OI.getInstance().speedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 0);
-		
-		Drive.getInstance().talonLB.setP(Drive.getInstance().turn_P_LEFT);
-		Drive.getInstance().talonLB.setI(Drive.getInstance().turn_I_LEFT);
-		Drive.getInstance().talonLB.setD(Drive.getInstance().turn_D_LEFT);
-		
-		Drive.getInstance().talonRB.setP(Drive.getInstance().turn_P_RIGHT);
-		Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
-		Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
-	
-		RobotMap.SHOOTER_GOAL_SPEED = SmartDashboard.getNumber("Goal Shooter Speed", 0);
 	}
 
 	/**

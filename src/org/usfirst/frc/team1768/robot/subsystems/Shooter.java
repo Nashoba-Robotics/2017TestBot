@@ -42,6 +42,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 			shooterTalon.setI(turn_I_SHOOTER);
 			shooterTalon.setD(turn_D_SHOOTER);
 			shooterTalon.configEncoderCodesPerRev(ticksPerRev);
+			SmartDashboard.putNumber("Goal Shooter Speed", 0);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 			shooterMotorSetPoint = speed;
 
 			SmartDashboard.putString("Shooter Speed String",
-					shooterTalon.getSpeed() + "  :  " + -shooterMotorSetPoint);
+					-shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint);
 
 			switch (Robot.getInstance().shooterChooser.getSelected()) {
 			case on:

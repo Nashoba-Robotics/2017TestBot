@@ -21,10 +21,6 @@ public class OI {
 
 	private OI() {
 
-		SmartDashboard.putNumber("Speed Multiplier", speedMultiplier);
-		SmartDashboard.putNumber("Motor Speed", 0);
-		SmartDashboard.putNumber("Goal Shooter Speed", 0);
-
 		stickLeft = new Joystick(RobotMap.joystickLeftPort);
 		stickRight = new Joystick(RobotMap.joystickRightPort);
 	}

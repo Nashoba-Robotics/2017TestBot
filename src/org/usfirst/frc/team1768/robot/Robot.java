@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 	public void initSmartDashboard() {
 		shooterChooser = new SendableChooser<shooterState>();
 		shooterChooser.addDefault("Shooter on", shooterState.on);
-		shooterChooser.addDefault("Shooter off", shooterState.off);
+		shooterChooser.addObject("Shooter off", shooterState.off);
 		SmartDashboard.putData("Choose shooter mode", shooterChooser);
 
 	}

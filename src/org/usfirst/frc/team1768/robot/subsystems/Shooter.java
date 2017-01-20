@@ -34,7 +34,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 		if (shooterEnabled) {
 			shooterTalon = new CANTalon(RobotMap.shooterTalon);
 			shooterTalon.enableBrakeMode(false);
-			shooterTalon.changeControlMode(TalonControlMode.PercentVbus);
+			shooterTalon.changeControlMode(TalonControlMode.Speed);
 			shooterTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			shooterTalon.setF(turn_F_SHOOTER);
 			shooterTalon.setP(turn_P_SHOOTER);
@@ -60,7 +60,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 			shooterMotorSetPoint = speed;
 			SmartDashboard.putString("Shooter Speed String",
 					-shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint);
-			shooterTalon.set(-shooterMotorSetPoint);
+			shooterTalon.set(shooterMotorSetPoint);
 	}
 	
 	@Override

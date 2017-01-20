@@ -71,8 +71,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-	
-		RobotMap.SHOOTER_GOAL_SPEED = SmartDashboard.getNumber("Goal Shooter Speed", 0);
 	}
 
 	/**

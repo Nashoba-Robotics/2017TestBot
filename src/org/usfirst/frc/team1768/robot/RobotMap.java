@@ -10,7 +10,6 @@ public class RobotMap {
 
 	// TODO: Get actual numbers
 	public static final int joystickLeftPort = 0;
-	public static final int joystickRightPort = 1;
 
 	// Talon ports
 	public static final int talonLF = 0;
@@ -18,12 +17,12 @@ public class RobotMap {
 	public static final int talonLB = 1;
 	public static final int talonRB = 3;
 	// TODO: Get shooterTalon port
-	public static final int shooterTalon = 0;
+	public static final int shooterTalon = 2;
 
 	public static final double WHEEL_DIAMETER = 3.5;
 	public static final double MAX_RPM = 200;
 
-	public static final double MAX_SHOOTER_RPM = 5900;
+	public static final double MAX_SHOOTER_RPM = 260;
 	//For testing purposes
 	public static double SHOOTER_GOAL_SPEED = 4400; // rpm
 }

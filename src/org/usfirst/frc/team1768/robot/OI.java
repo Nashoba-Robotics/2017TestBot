@@ -8,21 +8,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	
-	public double speedMultiplier = 1.0;
-	
-	public double[] motorSpeedValue = new double[2];
 
 	public final static double JOYSTICK_DEAD_ZONE = 0.15;
 
 	private static OI singleton;
 
-	public Joystick stickLeft, stickRight;
+	public Joystick stickLeft;
 
 	private OI() {
 
 		stickLeft = new Joystick(RobotMap.joystickLeftPort);
-		stickRight = new Joystick(RobotMap.joystickRightPort);
 	}
 
 	public static OI getInstance() {
@@ -37,7 +32,7 @@ public class OI {
 	}
 
 	// Motor joystick
-	public double[] getMotorSpeedValues() {
-		return motorSpeedValue;
+	public double getMotorSpeedValue() {
+		return stickLeft.getY();
 	}
 }

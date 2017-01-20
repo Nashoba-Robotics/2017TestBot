@@ -1,24 +1,19 @@
 package org.usfirst.frc.team1768.robot.subsystems;
 
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 
 public class RaspberryPi {
 
-	private I2C i2c;
+	private SPI spi;
 	private byte[] distance;
 	private byte[] turnAngle;
 	private Thread updater;
 
-	private final int PI_ADDRESS = 0x00;
-	//private final int PI_CONFIG_REGISTER = 0x00;
-	private final int PI_DISTANCE_REGISTER = 0x5f;
-	private final int PI_ANGLE_REGISTER = 0x6f;
-
 	private int distanceValue; // sixteenth of an inch
 	private int turnAngleValue; // hundredth of a degree
 
-	public RaspberryPi(I2C.Port port) {
-		i2c = new I2C(port, PI_ADDRESS);
+	public RaspberryPi(SPI.Port port) {
+		spi = new SPI(port);
 
 		distance = new byte[4];
 		turnAngle = new byte[4];
@@ -66,13 +61,12 @@ public class RaspberryPi {
 
 	public void update() {
 		if (previousWriteSuccess) {
-			i2c.read(PI_DISTANCE_REGISTER, 4, distance); // Read in measurement
+			spi.read(false, distance, 4); // Read in measurement
 			distanceValue = (int) ((distance[0] << 24) + (distance[1] << 16) + (distance[2] << 8) + distance[3]);
 
-			i2c.read(PI_ANGLE_REGISTER, 4, turnAngle);
+			spi.read(false, turnAngle, 4);
 			distanceValue = (int) ((turnAngle[0] << 24) + (turnAngle[1] << 16) + (turnAngle[2] << 8) + turnAngle[3]);
 		}
-		//previousWriteSuccess = !i2c.write(PI_CONFIG_REGISTER, 0xFF);
 	}
 
 	// Timer task to keep distance updated

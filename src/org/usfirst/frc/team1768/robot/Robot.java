@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+import org.usfirst.frc.team1768.robot.subsystems.PureVoltageControl;
 import org.usfirst.frc.team1768.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -27,10 +29,10 @@ public class Robot extends IterativeRobot {
 		return singleton;
 	}
 
-	public SendableChooser<shooterState> shooterChooser;
+	public SendableChooser<controlState> controlChooser;
 
-	public enum shooterState {
-		on, off
+	public enum controlState {
+		shooter, voltage
 	}
 
 	/**
@@ -42,14 +44,14 @@ public class Robot extends IterativeRobot {
 			singleton = this;
 		initSmartDashboard();
 		Shooter.init();
+		PureVoltageControl.init();
 	}
 
 	public void initSmartDashboard() {
-		shooterChooser = new SendableChooser<shooterState>();
-		shooterChooser.addDefault("Shooter on", shooterState.on);
-		shooterChooser.addObject("Shooter off", shooterState.off);
-		SmartDashboard.putData("Choose shooter mode", shooterChooser);
-
+		controlChooser = new SendableChooser<controlState>();
+		controlChooser.addDefault("Shooter mode", controlState.shooter);
+		controlChooser.addObject("Voltage mode", controlState.voltage);
+		SmartDashboard.putData("Choose control mode", controlChooser);
 	}
 
 	/**

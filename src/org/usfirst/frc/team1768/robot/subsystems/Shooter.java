@@ -15,17 +15,16 @@ import lib.SmartDashboardSource;
 
 public class Shooter extends NRSubsystem implements SmartDashboardSource, Periodic {
 
-	// TODO: MAKE TRUE!!!!!!!!!!!!!!!!
 	public static boolean shooterEnabled = true;
 
 	private static Shooter singleton;
 
 	public CANTalon shooterTalon;
 
-	double shooterMotorSetPoint = 0;
+	private double shooterMotorSetPoint = 0;
 
-	public double turn_F_SHOOTER = .1025;
-	public double turn_P_SHOOTER = .4;
+	public double turn_F_SHOOTER = 2.3;
+	public double turn_P_SHOOTER = 0;
 	public double turn_I_SHOOTER = 0;
 	public double turn_D_SHOOTER = 0;
 
@@ -58,21 +57,10 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 	}
 
 	public void setMotorSpeed(double speed) {
-		if (shooterEnabled) {
 			shooterMotorSetPoint = speed;
-
 			SmartDashboard.putString("Shooter Speed String",
 					-shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint);
-
-			switch (Robot.getInstance().shooterChooser.getSelected()) {
-			case on:
-				shooterTalon.set(-shooterMotorSetPoint);
-				break;
-			case off:
-				shooterTalon.set(0);
-				break;
-			}
-		}
+			shooterTalon.set(-shooterMotorSetPoint);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ public class ShooterConstantSpeedCommand extends NRCommand{
 		requires(Shooter.getInstance());
 	}
 
+	@Override
 	protected void onExecute() {
 		switch (Robot.getInstance().controlChooser.getSelected()) {
 		case shooter:
@@ -23,5 +24,4 @@ public class ShooterConstantSpeedCommand extends NRCommand{
 			break;
 		}
 	}
-	
 }

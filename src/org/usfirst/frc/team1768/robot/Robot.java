@@ -34,6 +34,10 @@ public class Robot extends IterativeRobot {
 	public enum controlState {
 		shooter, voltage
 	}
+	
+	public enum mode {
+		manualInput, tankDrive, arcadeDrive
+	}
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -67,6 +71,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+	
+		RobotMap.SHOOTER_GOAL_SPEED = SmartDashboard.getNumber("Goal Shooter Speed", 0);
 	}
 
 	/**

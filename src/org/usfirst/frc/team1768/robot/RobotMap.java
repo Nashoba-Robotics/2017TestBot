@@ -23,6 +23,7 @@ public class RobotMap {
 	public static final double MAX_RPM = 200;
 
 	public static final double MAX_SHOOTER_RPM = 260;
+
 	//For testing purposes
-	public static double SHOOTER_GOAL_SPEED = 4400; // rpm
+	public static double SHOOTER_GOAL_SPEED = 0; // rpm
 }

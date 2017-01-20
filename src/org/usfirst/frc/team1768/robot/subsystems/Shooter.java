@@ -16,9 +16,9 @@ import lib.SmartDashboardSource;
 public class Shooter extends NRSubsystem implements SmartDashboardSource, Periodic {
 
 	public static boolean shooterEnabled = true;
-
+	
 	private static Shooter singleton;
-
+	
 	public CANTalon shooterTalon;
 
 	private double shooterMotorSetPoint = 0;
@@ -34,7 +34,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 		if (shooterEnabled) {
 			shooterTalon = new CANTalon(RobotMap.shooterTalon);
 			shooterTalon.enableBrakeMode(false);
-			shooterTalon.changeControlMode(TalonControlMode.Speed);
+			shooterTalon.changeControlMode(TalonControlMode.PercentVbus);
 			shooterTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			shooterTalon.setF(turn_F_SHOOTER);
 			shooterTalon.setP(turn_P_SHOOTER);
@@ -44,33 +44,33 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 			SmartDashboard.putNumber("Goal Shooter Speed", 0);
 		}
 	}
-
+	
 	public static Shooter getInstance() {
 		init();
 		return singleton;
 	}
-
+	
 	public static void init() {
 		if (singleton == null) {
 			singleton = new Shooter();
 		}
 	}
-
+	
 	public void setMotorSpeed(double speed) {
 			shooterMotorSetPoint = speed;
 			SmartDashboard.putString("Shooter Speed String",
 					-shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint);
 			shooterTalon.set(-shooterMotorSetPoint);
 	}
-
+	
 	@Override
 	public void periodic() {
-
+		
 	}
 
 	@Override
 	public void smartDashboardInfo() {
-
+		
 	}
 
 	@Override

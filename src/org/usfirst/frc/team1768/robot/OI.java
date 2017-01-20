@@ -33,6 +33,19 @@ public class OI {
 
 	// Motor joystick
 	public double getMotorSpeedValue() {
-		return stickLeft.getY();
+		return snapDriveJoysticks(stickLeft.getY());
+	}
+
+	private static double snapDriveJoysticks(double value) {
+		if (Math.abs(value) < JOYSTICK_DEAD_ZONE) {
+			value = 0;
+		} else if (value > 0) {
+			value -= JOYSTICK_DEAD_ZONE;
+		} else {
+			value += JOYSTICK_DEAD_ZONE;
+		}
+		value /= 1 - JOYSTICK_DEAD_ZONE;
+
+		return value;
 	}
 }

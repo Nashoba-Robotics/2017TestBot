@@ -20,20 +20,20 @@ public class SetVoltageCommand extends NRCommand{
 		case voltage:
 			switch(PureVoltageControl.getInstance().motorChooser.getSelected()) {
 			case motorLF:
-				//PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonLF);
-				PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonLF);
+				PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonLF);
+				//PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonLF);
 				break;
 			case motorLB:
-				//PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonLB);
-				PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonLB);
+				PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonLB);
+				//PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonLB);
 				break;
 			case motorRF:
-				//PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonRF);
-				PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonRF);
+				PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonRF);
+				//PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonRF);
 				break;
 			case motorRB:
-				//PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonRB);
-				PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonRB);
+				PureVoltageControl.getInstance().setMotorSpeed(SmartDashboard.getNumber("Voltage Percentage", 0), PureVoltageControl.getInstance().talonRB);
+				//PureVoltageControl.getInstance().setMotorSpeed(OI.getInstance().getMotorSpeedValue(), PureVoltageControl.getInstance().talonRB);
 				break;
 			}
 			break;

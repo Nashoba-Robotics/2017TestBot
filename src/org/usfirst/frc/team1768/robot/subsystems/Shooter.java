@@ -23,8 +23,8 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 
 	private double shooterMotorSetPoint = 0;
 
-	public double turn_F_SHOOTER = 2.3;
-	public double turn_P_SHOOTER = 0;
+	public double turn_F_SHOOTER = 0.17; //2.3 for Reuben
+	public double turn_P_SHOOTER = 1.5;
 	public double turn_I_SHOOTER = 0;
 	public double turn_D_SHOOTER = 0;
 
@@ -41,6 +41,9 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 			shooterTalon.setI(turn_I_SHOOTER);
 			shooterTalon.setD(turn_D_SHOOTER);
 			shooterTalon.configEncoderCodesPerRev(ticksPerRev);
+			
+			shooterTalon.reverseSensor(true);
+			
 			SmartDashboard.putNumber("Goal Shooter Speed", 0);
 		}
 	}
@@ -59,7 +62,8 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 	public void setMotorSpeed(double speed) {
 			shooterMotorSetPoint = speed;
 			SmartDashboard.putString("Shooter Speed String",
-					-shooterTalon.getSpeed() + "  :  " + shooterMotorSetPoint);
+					Math.abs(shooterTalon.getSpeed()) * Math.signum(shooterMotorSetPoint) + "  :  " + shooterMotorSetPoint);
+			SmartDashboard.putNumber("Motor Current", shooterTalon.getOutputCurrent());
 			shooterTalon.set(shooterMotorSetPoint);
 	}
 	

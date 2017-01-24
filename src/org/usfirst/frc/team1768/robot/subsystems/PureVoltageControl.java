@@ -71,7 +71,7 @@ public class PureVoltageControl extends NRSubsystem implements SmartDashboardSou
 
 	public void setMotorSpeed(double voltage, CANTalon talon) {
 		motorSetPoint = voltage;
-		talon.set(voltage);
+		talon.set(motorSetPoint);
 	}
 
 	@Override

@@ -22,8 +22,11 @@ public class RobotMap {
 	public static final double WHEEL_DIAMETER = 3.5;
 	public static final double MAX_RPM = 200;
 
-	public static final double MAX_SHOOTER_RPM = 260;
+	//Intake prototype
+	//public static final double MAX_SHOOTER_RPM = 260;
+	//Linear shooter prototype
+	public static final double MAX_SHOOTER_RPM = 4400;
 
 	//For testing purposes
-	public static double SHOOTER_GOAL_SPEED = 0; // rpm
+	public static double SHOOTER_GOAL_SPEED = 120; // rpm
 }

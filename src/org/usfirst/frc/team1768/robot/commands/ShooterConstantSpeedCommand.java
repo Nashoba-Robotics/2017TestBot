@@ -17,7 +17,7 @@ public class ShooterConstantSpeedCommand extends NRCommand{
 	protected void onExecute() {
 		switch (Robot.getInstance().controlChooser.getSelected()) {
 		case shooter:
-			Shooter.getInstance().setMotorSpeed(SmartDashboard.getNumber("Goal Shooter Speed", 0));
+			Shooter.getInstance().setMotorSpeed(SmartDashboard.getNumber("Goal Shooter Speed", RobotMap.SHOOTER_GOAL_SPEED));
 			//Shooter.getInstance().setMotorSpeed(RobotMap.SHOOTER_GOAL_SPEED);
 			break;
 		case voltage:
